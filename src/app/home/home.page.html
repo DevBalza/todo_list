@@ -1,20 +1,87 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
+    <ion-title> TodoList </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
+      <ion-title size="large">TodoList</ion-title>
     </ion-toolbar>
   </ion-header>
+  <ion-card>
+    <form [formGroup]="taskForm" (ngSubmit)="registerTask()">
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <ion-input formControlName="title" label="title"></ion-input>
+          </ion-col>
+        </ion-row>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
+        @if(title.errors && (title.touched || title.dirty)) {
+        <ion-row>
+          <ion-col>
+            <ion-text color="danger">Título mínimo de 3 caracteres</ion-text>
+          </ion-col>
+        </ion-row>
+        }
+
+        <ion-row>
+          <ion-col>
+            <ion-input
+              formControlName="description"
+              label="description"
+            ></ion-input>
+          </ion-col>
+        </ion-row>
+
+        @if(description.errors && (description.touched || description.dirty)) {
+        <ion-row>
+          <ion-col>
+            <ion-text color="danger"
+              >Descripción debe tener mínimo 10 caracteres
+            </ion-text>
+          </ion-col>
+        </ion-row>
+        }
+
+        <ion-row>
+          <ion-col>
+            <ion-button
+              [disabled]="taskForm.invalid"
+              type="submit"
+              color="success"
+              >ADD</ion-button
+            >
+          </ion-col>
+        </ion-row>
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Tasks</ion-card-title>
+          </ion-card-header>
+          @if (arraysTask.length === 0) {
+          <ion-card-content>
+            <ion-text>No se encontaron tareas</ion-text>
+          </ion-card-content>
+
+          } @else { @for (task of arraysTask; track $index) {
+          <ion-card-content>
+            <ion-label>
+              <h2>{{ task.title }}</h2>
+              <p>{{ task.description }}</p>
+              <p *ngIf="task.done" style="color: green">Done</p>
+            </ion-label>
+            <ion-toggle
+              class="ion-toggle-checked"
+              (ionChange)="updateTaskStatus(task, $event)"
+              [checked]="task.done"
+              slot="end"
+            ></ion-toggle>
+          </ion-card-content>
+          } }
+        </ion-card>
+      </ion-grid>
+    </form>
+  </ion-card>
 </ion-content>
